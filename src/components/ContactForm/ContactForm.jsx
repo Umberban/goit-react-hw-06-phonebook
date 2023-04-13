@@ -2,20 +2,29 @@ import css from './ContactForm.module.css'
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { useSelector } from "react-redux";
 import { addContact } from 'redux/contactSlice';
+import {getContacts} from 'redux/selector'
 export const ContactForm =()=> {
   
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
-
+  const contacts = useSelector(getContacts);
 
  const handlerSumbit = e =>{
     e.preventDefault();
+    // console.log(contacts[0].name=== name);
     setName(e.target.name.value);
     setNumber(e.target.number.value)
-    
+    if (contacts.some(item => item.name === name)) {
+      alert( "This contact already exists" );
+      return;
+    }
+
+
+
     dispatch(addContact(name,number));
     setNumber('')
     setName('')
